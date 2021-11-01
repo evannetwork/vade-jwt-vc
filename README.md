@@ -1,4 +1,4 @@
-# VadeJWTVC Plugin
+# VadeJwtVC Plugin
 
 [![crates.io](https://img.shields.io/crates/v/vade-jwt-vc.svg)](https://crates.io/crates/vade-jwt-vc)
 [![Documentation](https://docs.rs/vade-jwt-vc/badge.svg)](https://docs.rs/vade-jwt-vc:q)
