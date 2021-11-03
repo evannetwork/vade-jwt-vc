@@ -36,7 +36,11 @@
 //! [`VadePlugin`]: https://docs.rs/vade/*/vade/trait.VadePlugin.html
 
 #[macro_use]
+extern crate log;
 
-// did
+pub(crate) mod crypto;
+pub mod datatypes;
+mod utils;
+
 mod vade_jwt_vc;
 pub use self::vade_jwt_vc::*;

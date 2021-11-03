@@ -14,4 +14,95 @@
   limitations under the License.
 */
 
-extern crate vade;
+use crate::{{
+        datatypes::{
+            Credential,
+            ProofVerification,
+            CredentialSubject,
+            UnsignedCredential,
+        },
+        utils::{decode_base64, generate_uuid},
+        crypto::signing::Signer,
+    },
+};
+use async_trait::async_trait;
+
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
+use std::{collections::HashMap, error::Error};
+use vade::{Vade, VadePlugin, VadePluginResultValue};
+
+const EVAN_METHOD: &str = "did:evan";
+const EVAN_METHOD_ZKP: &str = "did:evan:zkp";
+const PROOF_METHOD_JWT: &str = "jwt";
+
+pub struct VadeJwtVC {
+    signer: Box<dyn Signer>,
+    vade: Vade,
+}
+
+macro_rules! ignore_unrelated {
+    ($method:expr) => {{
+        if $method != EVAN_METHOD {
+            return Ok(VadePluginResultValue::Ignored);
+        }
+    }};
+}
+
+impl VadeJwtVC {
+    /// Creates new instance of `VadeEvanBbs`.
+    pub fn new(vade: Vade, signer: Box<dyn Signer>) -> VadeJwtVC {
+        match env_logger::try_init() {
+            Ok(_) | Err(_) => (),
+        };
+        VadeJwtVC { signer, vade }
+    }
+}
+
+#[async_trait(?Send)]
+impl VadePlugin for VadeJwtVC {
+
+    /// Issues a new credential. This requires an issued schema, revocations list, an credential offer
+    /// and a credential request message. This method returns an unfinished credential which has to be post-processed
+    /// by the holder.
+    ///
+    /// # Arguments
+    ///
+    /// * `method` - method to issue a credential for (e.g. "did:example")
+    /// * `options` -
+    /// * `payload` -  
+    ///
+    /// # Returns
+    /// * serialized [`Credential`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.Credential.html)
+    async fn vc_zkp_issue_credential(
+        &mut self,
+        method: &str,
+        options: &str,
+        payload: &str,
+    ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
+        ignore_unrelated!(method);
+
+        Ok(VadePluginResultValue::Success(Some("".to_string())))
+    }
+
+    /// Verifies one or multiple proofs sent in a proof presentation.
+    ///
+    /// # Arguments
+    ///
+    /// * `method` - method to verify a proof for (e.g. "did:example")
+    /// * `options` - 
+    /// * `payload` - 
+    ///
+    /// # Returns
+    /// * `Option<String>` - A JSON object representing a `ProofVerification` type, specifying whether verification was successful
+    async fn vc_zkp_verify_proof(
+        &mut self,
+        method: &str,
+        options: &str,
+        payload: &str,
+    ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
+        ignore_unrelated!(method);
+
+        Ok(VadePluginResultValue::Success(Some("".to_string())))
+    }
+}
