@@ -18,21 +18,14 @@ use crate::{
     crypto::crypto_utils::{check_assertion_proof, create_assertion_proof},
     crypto::signing::Signer,
     datatypes::{Credential, IssueCredentialPayload, ProofVerification, VerifyProofPayload},
-    utils::{decode_base64, generate_uuid},
 };
 use async_trait::async_trait;
-
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
-use std::{collections::HashMap, error::Error};
+use std::error::Error;
 use vade::{Vade, VadePlugin, VadePluginResultValue};
 
 const EVAN_METHOD: &str = "did:evan";
-const EVAN_METHOD_ZKP: &str = "did:evan:zkp";
-
 pub struct VadeJwtVC {
     signer: Box<dyn Signer>,
-    vade: Vade,
 }
 
 macro_rules! ignore_unrelated {
@@ -44,12 +37,12 @@ macro_rules! ignore_unrelated {
 }
 
 impl VadeJwtVC {
-    /// Creates new instance of `VadeEvanBbs`.
-    pub fn new(vade: Vade, signer: Box<dyn Signer>) -> VadeJwtVC {
+    /// Creates new instance of `VadeJwtVC`.
+    pub fn new(signer: Box<dyn Signer>) -> VadeJwtVC {
         match env_logger::try_init() {
             Ok(_) | Err(_) => (),
         };
-        VadeJwtVC { signer, vade }
+        VadeJwtVC { signer }
     }
 }
 
@@ -132,6 +125,8 @@ impl VadePlugin for VadeJwtVC {
             Err(_) => ProofVerification { verified: false },
         };
 
-        Ok(VadePluginResultValue::Success(Some(serde_json::to_string(&res)?)))
+        Ok(VadePluginResultValue::Success(Some(serde_json::to_string(
+            &res,
+        )?)))
     }
 }
