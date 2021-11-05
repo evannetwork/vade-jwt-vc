@@ -28,7 +28,6 @@ pub const DEFAULT_REVOCATION_CONTEXTS: [&'static str; 2] = [
     "https://w3id.org/vc-revocation-list-2020/v1",
 ];
 
-
 /// Metadata about a property of a credential schema
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -108,15 +107,11 @@ pub struct CredentialStatus {
     pub revocation_list_credential: String,
 }
 
-/// Result of a call to the verifyProof endpoint. Gives the status of a verification (i.e. whether it
-/// was successful or not) and a reason, if rejected.
+/// Result of a verify_proof call
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ProofVerification {
-    pub presented_proof: String,
-    pub status: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub reason: Option<String>,
+    pub verified: bool,
 }
 
 /// Reference to a credential schema.
@@ -125,4 +120,28 @@ pub struct ProofVerification {
 pub struct CredentialSchemaReference {
     pub id: String,
     pub r#type: String,
+}
+
+/// Payload for signing an Unsigned credential
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IssueCredentialPayload {
+    /// The VC to sign, without any appended proof
+    pub unsigned_vc: UnsignedCredential,
+    /// DID url of the public key of the issuer used to later verify the signature
+    pub issuer_public_key_id: String,
+    /// The public key of the issuer used to later verify the signature
+    pub issuer_public_key: String,
+    /// The secret key used to create the signature
+    pub issuer_secret_key: String,
+}
+
+/// Payload for verifying a signed Credential.
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VerifyProofPayload {
+    /// VC to verify
+    pub credential: Credential,
+    /// Signer address
+    pub signer_address: String,
 }
