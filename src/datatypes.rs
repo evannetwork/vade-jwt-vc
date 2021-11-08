@@ -63,10 +63,8 @@ pub struct Credential {
     pub issuer: String,
     pub issuance_date: String,
     pub credential_subject: CredentialSubject,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub credential_schema: Option<CredentialSchemaReference>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub credential_status: Option<CredentialStatus>,
+    pub credential_schema: CredentialSchemaReference,
+    pub credential_status: CredentialStatus,
     pub proof: AssertionProof,
 }
 
@@ -83,10 +81,8 @@ pub struct UnsignedCredential {
     pub valid_until: Option<String>,
     pub issuance_date: String,
     pub credential_subject: CredentialSubject,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub credential_schema: Option<CredentialSchemaReference>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub credential_status: Option<CredentialStatus>,
+    pub credential_schema: CredentialSchemaReference,
+    pub credential_status: CredentialStatus,
 }
 
 /// Payload/data part of a verifiable credential.
@@ -144,4 +140,14 @@ pub struct VerifyProofPayload {
     pub credential: Credential,
     /// Signer address
     pub signer_address: String,
+}
+
+/// Contains necessary information to sign the data
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SingerOptions {
+    /// Reference to the private key, will be forwarded to external signer if available
+    pub private_key: String,
+    /// DID of the identity
+    pub identity: String,
 }

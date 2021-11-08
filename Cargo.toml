@@ -45,4 +45,5 @@ vade = { git = "ssh://git@git.slock.it/equs/interop/vade/vade.git", branch = "de
 chrono = { version = "0.4.11",  default-features = false, features=["wasm-bindgen", "clock", "js-sys"] }
 
 [dev-dependencies]
-tokio = { version = "=1.7.1", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.7.1", features = ["macros", "rt-multi-thread"] }
+utilities = { path = "utilities" }

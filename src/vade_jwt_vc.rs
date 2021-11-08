@@ -17,11 +17,11 @@
 use crate::{
     crypto::crypto_utils::{check_assertion_proof, create_assertion_proof},
     crypto::signing::Signer,
-    datatypes::{Credential, IssueCredentialPayload, ProofVerification, VerifyProofPayload},
+    datatypes::{Credential, IssueCredentialPayload, ProofVerification, VerifyProofPayload, SingerOptions},
 };
 use async_trait::async_trait;
 use std::error::Error;
-use vade::{Vade, VadePlugin, VadePluginResultValue};
+use vade::{VadePlugin, VadePluginResultValue};
 
 const EVAN_METHOD: &str = "did:evan";
 pub struct VadeJwtVC {
@@ -63,17 +63,18 @@ impl VadePlugin for VadeJwtVC {
     async fn vc_zkp_issue_credential(
         &mut self,
         method: &str,
-        _options: &str,
+        options: &str,
         payload: &str,
     ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
         ignore_unrelated!(method);
         let issue_credential_payload: IssueCredentialPayload = serde_json::from_str(payload)?;
+        let options: SingerOptions = serde_json::from_str(options)?;
 
         let proof = create_assertion_proof(
             &serde_json::to_value(issue_credential_payload.unsigned_vc.clone())?,
             &issue_credential_payload.issuer_public_key_id,
             &issue_credential_payload.unsigned_vc.issuer,
-            &issue_credential_payload.issuer_secret_key,
+            &options.private_key,
             &self.signer,
         )
         .await?;

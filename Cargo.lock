@@ -1712,6 +1712,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "utilities"
+version = "0.0.1"
+
+[[package]]
 name = "uuid"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1761,6 +1765,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "twox-hash",
+ "utilities",
  "uuid",
  "vade",
 ]

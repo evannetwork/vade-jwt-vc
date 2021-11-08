@@ -17,7 +17,7 @@
 use base64::Config;
 #[cfg(not(target_arch = "wasm32"))]
 use chrono::Utc;
-use std::{error::Error, panic};
+use std::{error::Error};
 use uuid::Uuid;
 
 pub fn get_now_as_iso_string() -> String {

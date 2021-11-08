@@ -38,7 +38,7 @@
 #[macro_use]
 extern crate log;
 
-pub(crate) mod crypto;
+pub mod crypto;
 pub mod datatypes;
 mod utils;
 
