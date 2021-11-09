@@ -31,7 +31,6 @@ use vade::Vade;
 
 use vade_jwt_vc::{
     VadeJwtVC,
-    crypto::signing::{LocalSigner, Signer},
     datatypes::{IssueCredentialPayload,VerifyProofPayload,ProofVerification,UnsignedCredential,Credential}
 };
 
@@ -44,9 +43,7 @@ fn get_vade() -> Vade {
 }
 
 fn get_vade_jwt() -> VadeJwtVC {
-    // vade to work with
-    let signer: Box<dyn Signer> = Box::new(LocalSigner::new());
-    VadeJwtVC::new(signer)
+    VadeJwtVC::new()
 }
 
 fn get_options() -> String {

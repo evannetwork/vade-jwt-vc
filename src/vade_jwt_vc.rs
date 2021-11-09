@@ -16,7 +16,7 @@
 
 use crate::{
     crypto::crypto_utils::{check_assertion_proof, create_assertion_proof},
-    crypto::signing::Signer,
+    crypto::signing::{LocalSigner, Signer},
     datatypes::{
         Credential, IssueCredentialPayload, ProofVerification, SingerOptions, VerifyProofPayload,
     },
@@ -26,9 +26,7 @@ use std::error::Error;
 use vade::{VadePlugin, VadePluginResultValue};
 
 const EVAN_METHOD: &str = "did:evan";
-pub struct VadeJwtVC {
-    signer: Box<dyn Signer>,
-}
+pub struct VadeJwtVC {}
 
 macro_rules! ignore_unrelated {
     ($method:expr) => {{
@@ -40,18 +38,18 @@ macro_rules! ignore_unrelated {
 
 impl VadeJwtVC {
     /// Creates new instance of `VadeJwtVC`.
-    pub fn new(signer: Box<dyn Signer>) -> VadeJwtVC {
+    pub fn new() -> VadeJwtVC {
         match env_logger::try_init() {
             Ok(_) | Err(_) => (),
         };
-        VadeJwtVC { signer }
+        VadeJwtVC {}
     }
 }
 
 #[async_trait(?Send)]
 impl VadePlugin for VadeJwtVC {
     /// Issues a new credential. This requires an UnsignedCredential.
-    /// This method returns a signed Credential which has proof attached 
+    /// This method returns a signed Credential which has proof attached
     ///
     /// # Arguments
     ///
@@ -70,13 +68,14 @@ impl VadePlugin for VadeJwtVC {
         ignore_unrelated!(method);
         let issue_credential_payload: IssueCredentialPayload = serde_json::from_str(payload)?;
         let options: SingerOptions = serde_json::from_str(options)?;
+        let signer: Box<dyn Signer> = Box::new(LocalSigner::new());
 
         let proof = create_assertion_proof(
             &serde_json::to_value(issue_credential_payload.unsigned_vc.clone())?,
             &issue_credential_payload.issuer_public_key_id,
             &issue_credential_payload.unsigned_vc.issuer,
             &options.private_key,
-            &self.signer,
+            &signer,
         )
         .await?;
 

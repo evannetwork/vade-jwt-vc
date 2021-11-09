@@ -37,7 +37,7 @@
 
 extern crate log;
 
-pub mod crypto;
+pub(crate) mod crypto;
 pub mod datatypes;
 mod utils;
 
