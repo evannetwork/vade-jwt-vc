@@ -50,9 +50,8 @@ impl VadeJwtVC {
 
 #[async_trait(?Send)]
 impl VadePlugin for VadeJwtVC {
-    /// Issues a new credential. This requires an issued schema, revocations list, an credential offer
-    /// and a credential request message. This method returns an unfinished credential which has to be post-processed
-    /// by the holder.
+    /// Issues a new credential. This requires an UnsignedCredential.
+    /// This method returns a signed Credential which has proof attached 
     ///
     /// # Arguments
     ///
@@ -98,7 +97,7 @@ impl VadePlugin for VadeJwtVC {
         )?)))
     }
 
-    /// Verifies one or multiple proofs sent in a proof presentation.
+    /// Verifies one or multiple proofs sent in a verified credential.
     ///
     /// # Arguments
     ///
