@@ -18,15 +18,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub const CREDENTIAL_PROOF_PURPOSE: &str = "assertionMethod";
-pub const DEFAULT_CREDENTIAL_CONTEXTS: [&'static str; 3] = [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://schema.org",
-    "https://w3id.org/vc-revocation-list-2020/v1",
-];
-pub const DEFAULT_REVOCATION_CONTEXTS: [&'static str; 2] = [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://w3id.org/vc-revocation-list-2020/v1",
-];
 
 /// Metadata about a property of a credential schema
 #[derive(Serialize, Deserialize, Clone)]
@@ -128,8 +119,6 @@ pub struct IssueCredentialPayload {
     pub issuer_public_key_id: String,
     /// The public key of the issuer used to later verify the signature
     pub issuer_public_key: String,
-    /// The secret key used to create the signature
-    pub issuer_secret_key: String,
 }
 
 /// Payload for verifying a signed Credential.

@@ -55,8 +55,8 @@ impl VadePlugin for VadeJwtVC {
     /// # Arguments
     ///
     /// * `method` - method to issue a credential for (e.g. "did:example")
-    /// * `options` -
-    /// * `payload` -  
+    /// * `options` - serialized [`SingerOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.SingerOptions.html)
+    /// * `payload` - serialized [`IssueCredentialPayload`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.IssueCredentialPayload.html)
     ///
     /// # Returns
     /// * serialized [`Credential`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.Credential.html)
@@ -101,8 +101,8 @@ impl VadePlugin for VadeJwtVC {
     /// # Arguments
     ///
     /// * `method` - method to verify a proof for (e.g. "did:example")
-    /// * `options` -
-    /// * `payload` -
+    /// * `_options` - _options not required for vc_zkp_verify_proof, it should be left empty e.g: => "{}"
+    /// * `payload` - serialized [`VerifyProofPayload`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.VerifyProofPayload.html)
     ///
     /// # Returns
     /// * `Option<String>` - A JSON object representing a `ProofVerification` type, specifying whether verification was successful

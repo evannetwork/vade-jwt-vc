@@ -35,7 +35,6 @@
 //! [`VadeJwtVC `]: https://git.slock.it/equs/interop/vade/vade-jwt-vc
 //! [`VadePlugin`]: https://docs.rs/vade/*/vade/trait.VadePlugin.html
 
-#[macro_use]
 extern crate log;
 
 pub mod crypto;
