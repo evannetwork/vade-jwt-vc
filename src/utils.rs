@@ -17,7 +17,7 @@
 use base64::Config;
 #[cfg(not(target_arch = "wasm32"))]
 use chrono::Utc;
-use std::{error::Error};
+use std::error::Error;
 
 pub fn get_now_as_iso_string() -> String {
     #[cfg(target_arch = "wasm32")]

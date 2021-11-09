@@ -21,7 +21,7 @@ Supports issue and verify VC with simple JWT signature based on SECP256K1 curve:
 cargo build --release
 ```
 
-[`vc_zkp_issue_credential`]: https://docs.rs/vade_evan_bbs/*/vade_evan_bbs/struct.VadeEvanBbs.html#method.vc_zkp_issue_credential
-[`vc_zkp_verify_proof`]: https://docs.rs/vade_evan_bbs/*/vade_evan_bbs/struct.VadeEvanBbs.html#method.vc_zkp_verify_proof
+[`vc_zkp_issue_credential`]: https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.VadeJwtVC.html#method.vc_zkp_issue_credential
+[`vc_zkp_verify_proof`]: https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.VadeJwtVC.html#method.vc_zkp_verify_proof
 [`VadeJwtVC `]: https://git.slock.it/equs/interop/vade/vade-jwt-vc
 [`VadePlugin`]: https://docs.rs/vade/*/vade/trait.VadePlugin.html

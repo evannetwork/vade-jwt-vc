@@ -15,9 +15,9 @@
 */
 
 use crate::{
+    crypto::signing::Signer,
     datatypes::AssertionProof,
     utils::{decode_base64_config, get_now_as_iso_string},
-    crypto::signing::Signer,
 };
 use base64;
 use secp256k1::{recover, Message, RecoveryId, Signature};

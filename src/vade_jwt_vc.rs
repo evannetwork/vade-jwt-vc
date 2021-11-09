@@ -17,7 +17,9 @@
 use crate::{
     crypto::crypto_utils::{check_assertion_proof, create_assertion_proof},
     crypto::signing::Signer,
-    datatypes::{Credential, IssueCredentialPayload, ProofVerification, VerifyProofPayload, SingerOptions},
+    datatypes::{
+        Credential, IssueCredentialPayload, ProofVerification, SingerOptions, VerifyProofPayload,
+    },
 };
 use async_trait::async_trait;
 use std::error::Error;
