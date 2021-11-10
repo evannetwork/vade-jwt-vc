@@ -18,7 +18,7 @@ use crate::{
     crypto::crypto_utils::{check_assertion_proof, create_assertion_proof},
     crypto::signing::{LocalSigner, Signer},
     datatypes::{
-        Credential, IssueCredentialPayload, ProofVerification, SingerOptions, VerifyProofPayload,
+        Credential, IssueCredentialPayload, ProofVerification, SignerOptions, VerifyProofPayload,
     },
 };
 use async_trait::async_trait;
@@ -54,7 +54,7 @@ impl VadePlugin for VadeJwtVC {
     /// # Arguments
     ///
     /// * `method` - method to issue a credential for (e.g. "did:example")
-    /// * `options` - serialized [`SingerOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.SingerOptions.html)
+    /// * `options` - serialized [`SignerOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.SignerOptions.html)
     /// * `payload` - serialized [`IssueCredentialPayload`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.IssueCredentialPayload.html)
     ///
     /// # Returns
@@ -67,7 +67,7 @@ impl VadePlugin for VadeJwtVC {
     ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
         ignore_unrelated!(method);
         let issue_credential_payload: IssueCredentialPayload = serde_json::from_str(payload)?;
-        let options: SingerOptions = serde_json::from_str(options)?;
+        let options: SignerOptions = serde_json::from_str(options)?;
         let signer: Box<dyn Signer> = Box::new(LocalSigner::new());
 
         let proof = create_assertion_proof(
@@ -96,7 +96,7 @@ impl VadePlugin for VadeJwtVC {
         )?)))
     }
 
-    /// Verifies one or multiple proofs sent in a verified credential.
+    /// Verifies the proof sent in a verified credential.
     ///
     /// # Arguments
     ///

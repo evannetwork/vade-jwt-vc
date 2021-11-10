@@ -134,7 +134,7 @@ pub struct VerifyProofPayload {
 /// Contains necessary information to sign the data
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct SingerOptions {
+pub struct SignerOptions {
     /// Reference to the private key, will be forwarded to external signer if available
     pub private_key: String,
     /// DID of the identity
