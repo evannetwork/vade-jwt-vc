@@ -76,7 +76,7 @@ pub async fn create_assertion_proof(
     // sign this hash
     let hash_arr: [u8; 32] = hash.try_into().map_err(|_| "slice with incorrect length")?;
     let message = format!("0x{}", &hex::encode(hash_arr));
-    let (sig_and_rec, _): ([u8; 65], _) = signer.sign_message(&message, &private_key).await?;
+    let (sig_and_rec, _): ([u8; 65], _) = signer.sign_message(&message, private_key).await?;
     let padded = base64::encode_config(&sig_and_rec, base64::URL_SAFE);
     let sig_base64url = padded.trim_end_matches('=');
 
@@ -132,7 +132,7 @@ pub fn check_assertion_proof(
         let jws: JwsData = serde_json::from_str(&decoded_payload_text)?;
         let doc = jws.doc.get();
         // parse recovered vc document into serde Map
-        let parsed_caps1: Value = serde_json::from_str(&doc)?;
+        let parsed_caps1: Value = serde_json::from_str(doc)?;
         let parsed_caps1_map = parsed_caps1
             .as_object()
             .ok_or("could not get jws doc as object")?;

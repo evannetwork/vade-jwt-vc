@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-use std::{error::Error};
+use std::error::Error;
 use utilities::test_data::{
     accounts::local::{
         ISSUER_DID,

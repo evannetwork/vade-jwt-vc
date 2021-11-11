@@ -46,6 +46,12 @@ impl VadeJwtVC {
     }
 }
 
+impl Default for VadeJwtVC {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[async_trait(?Send)]
 impl VadePlugin for VadeJwtVC {
     /// Issues a new credential. This requires an UnsignedCredential.
