@@ -36,8 +36,9 @@ pub struct JwsData<'a> {
 /// Creates proof for VC document
 ///
 /// # Arguments
-/// * `vc` - vc to create proof for
+/// * `document_to_sign` - vc to create proof for
 /// * `verification_method` - issuer of VC
+/// * `issuer` - DID of issuer
 /// * `private_key` - private key to create proof as 32B hex string
 /// * `signer` - `Signer` to sign with
 ///
@@ -103,8 +104,8 @@ pub async fn create_assertion_proof(
 ///
 /// # Arguments
 ///
-/// * `vc_id` - vc_id to check document for
-/// * `value` - value to check
+/// * `vc_document` - signed VC document which proof has to be checked
+/// * `signer_address` - ethereum address of signer
 pub fn check_assertion_proof(
     vc_document: &str,
     signer_address: &str,

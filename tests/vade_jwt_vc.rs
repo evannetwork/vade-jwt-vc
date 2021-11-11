@@ -70,8 +70,9 @@ async fn create_unfinished_credential(vade: &mut Vade) -> Result<Credential, Box
         .vc_zkp_issue_credential(EVAN_METHOD, &get_options(), &issue_cred_json)
         .await?;
 
+    let credential_value = &result[0].as_ref().ok_or("Invalid Credential Value Returned")?;
     let credential: Credential =
-        serde_json::from_str(&result[0].as_ref().unwrap())?;
+        serde_json::from_str(credential_value)?;
 
     Ok(credential)
 }
@@ -95,7 +96,8 @@ async fn vade_jwt_vc_can_propose_request_issue_verify_a_credential() -> Result<(
     let result = vade.vc_zkp_verify_proof(EVAN_METHOD, "{}", &verify_proof_json)
         .await?;
 
-    let proof_verification: ProofVerification = serde_json::from_str(&result[0].as_ref().unwrap())?;
+    
+    let proof_verification: ProofVerification = serde_json::from_str(&result[0].as_ref().ok_or("Invalid ProofVerification Returned")?)?;
     assert_eq!(proof_verification.verified, true);
     Ok(())
 }
