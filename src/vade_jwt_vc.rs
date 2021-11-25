@@ -86,7 +86,7 @@ impl VadePlugin for VadeJwtVC {
         options: &str,
         payload: &str,
     ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
-        ignore_unrelated!(method, &options.clone());
+        ignore_unrelated!(method, &options);
 
         let options: SignerOptions = serde_json::from_str(options)?;
         let issue_credential_payload: IssueCredentialPayload = serde_json::from_str(payload)?;
