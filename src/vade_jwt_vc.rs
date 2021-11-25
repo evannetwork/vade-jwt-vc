@@ -18,7 +18,11 @@ use crate::{
     crypto::crypto_utils::{check_assertion_proof, create_assertion_proof},
     crypto::signing::{LocalSigner, Signer},
     datatypes::{
-        Credential, IssueCredentialPayload, ProofVerification, SignerOptions, TypeOptions,
+        Credential,
+        IssueCredentialPayload,
+        ProofVerification,
+        SignerOptions,
+        TypeOptions,
         VerifyProofPayload,
     },
 };
