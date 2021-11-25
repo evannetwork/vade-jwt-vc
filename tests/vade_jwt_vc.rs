@@ -29,6 +29,7 @@ use vade_jwt_vc::{
     VadeJwtVC,
 };
 
+const PROOF_METHOD_JWT: &str = "jwt";
 const EVAN_METHOD: &str = "did:evan";
 
 fn get_vade() -> Vade {
@@ -42,17 +43,13 @@ fn get_vade_jwt() -> VadeJwtVC {
 }
 
 fn get_options() -> String {
-    let type_options = serde_json::to_string(&TypeOptions {
-        r#type: Some("jwt".to_string()),
-    })
-    .unwrap();
     format!(
         r###"{{
             "privateKey": "{}",
             "identity": "{}",
-            "type": {}
+            "type": "{}"
         }}"###,
-        SIGNER_1_PRIVATE_KEY, SIGNER_1_DID, type_options
+        SIGNER_1_PRIVATE_KEY, SIGNER_1_DID, PROOF_METHOD_JWT
     )
 }
 
@@ -97,7 +94,7 @@ async fn vade_jwt_vc_can_propose_request_issue_verify_a_credential() -> Result<(
     let verify_proof_json = serde_json::to_string(&verify_proof_payload)?;
 
     let type_options = serde_json::to_string(&TypeOptions {
-        r#type: Some("jwt".to_string()),
+        r#type: Some(PROOF_METHOD_JWT.to_string()),
     })?;
 
     let result = vade
