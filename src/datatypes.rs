@@ -148,6 +148,4 @@ pub struct SignerOptions {
     pub private_key: String,
     /// DID of the identity
     pub identity: String,
-    /// Type to be checked, should be jwt
-    pub r#type: Option<String>,
 }
