@@ -19,6 +19,15 @@ use std::collections::HashMap;
 
 pub const CREDENTIAL_PROOF_PURPOSE: &str = "assertionMethod";
 
+/// Message passed to vade containing the desired credential type.
+/// Does not perform action if type does not indicate credential type jwt.
+/// This can be done by passing "jwt" as the value for "type".
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TypeOptions {
+    pub r#type: Option<String>,
+}
+
 /// Metadata about a property of a credential schema
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -139,4 +148,6 @@ pub struct SignerOptions {
     pub private_key: String,
     /// DID of the identity
     pub identity: String,
+    /// TypeOptions to be checked
+    pub r#type: TypeOptions,
 }
