@@ -8,6 +8,6 @@
 
 ### Deprecations
 
-## Initial Version
+## v0.0.1
 
-- initial verson to issue and verify VC with simple JWT signature based on SECP256K1 curve
+- initial version to issue and verify VC with simple JWT signature based on SECP256K1 curve
