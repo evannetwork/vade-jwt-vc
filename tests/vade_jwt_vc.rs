@@ -16,24 +16,24 @@
 
 use std::error::Error;
 use utilities::test_data::{
-    accounts::local::{
-        ISSUER_DID,
-        SIGNER_1_ADDRESS,
-        SIGNER_1_DID,
-        SIGNER_1_PRIVATE_KEY,
-    },
-    jwt_coherent_context_test_data::{
-        PUB_KEY,
-        UNSIGNED_CREDENTIAL,
-    },
+    accounts::local::{ISSUER_DID, SIGNER_1_ADDRESS, SIGNER_1_DID, SIGNER_1_PRIVATE_KEY},
+    jwt_coherent_context_test_data::{PUB_KEY, UNSIGNED_CREDENTIAL},
 };
 use vade::Vade;
 
 use vade_jwt_vc::{
+    datatypes::{
+        Credential,
+        IssueCredentialPayload,
+        ProofVerification,
+        TypeOptions,
+        UnsignedCredential,
+        VerifyProofPayload,
+    },
     VadeJwtVC,
-    datatypes::{IssueCredentialPayload,VerifyProofPayload,ProofVerification,UnsignedCredential,Credential}
 };
 
+const PROOF_METHOD_JWT: &str = "jwt";
 const EVAN_METHOD: &str = "did:evan";
 
 fn get_vade() -> Vade {
@@ -50,9 +50,10 @@ fn get_options() -> String {
     format!(
         r###"{{
             "privateKey": "{}",
-            "identity": "{}"
+            "identity": "{}",
+            "type": "{}"
         }}"###,
-        SIGNER_1_PRIVATE_KEY, SIGNER_1_DID,
+        SIGNER_1_PRIVATE_KEY, SIGNER_1_DID, PROOF_METHOD_JWT
     )
 }
 
@@ -70,9 +71,10 @@ async fn create_unfinished_credential(vade: &mut Vade) -> Result<Credential, Box
         .vc_zkp_issue_credential(EVAN_METHOD, &get_options(), &issue_cred_json)
         .await?;
 
-    let credential_value = &result[0].as_ref().ok_or("Invalid Credential Value Returned")?;
-    let credential: Credential =
-        serde_json::from_str(credential_value)?;
+    let credential_value = &result[0]
+        .as_ref()
+        .ok_or("Invalid credential value returned")?;
+    let credential: Credential = serde_json::from_str(credential_value)?;
 
     Ok(credential)
 }
@@ -83,7 +85,7 @@ fn get_unsigned_vc() -> Result<UnsignedCredential, Box<dyn Error>> {
 }
 
 #[tokio::test]
-async fn vade_jwt_vc_can_propose_request_issue_verify_a_credential() -> Result<(), Box<dyn Error>> {
+async fn vade_jwt_vc_can_issue_and_verify_a_credential() -> Result<(), Box<dyn Error>> {
     let mut vade = get_vade();
 
     let credential = create_unfinished_credential(&mut vade).await?;
@@ -92,13 +94,22 @@ async fn vade_jwt_vc_can_propose_request_issue_verify_a_credential() -> Result<(
         credential,
         signer_address: SIGNER_1_ADDRESS.to_string(),
     };
+
     let verify_proof_json = serde_json::to_string(&verify_proof_payload)?;
-    let result = vade.vc_zkp_verify_proof(EVAN_METHOD, "{}", &verify_proof_json)
+
+    let type_options = serde_json::to_string(&TypeOptions {
+        r#type: Some(PROOF_METHOD_JWT.to_string()),
+    })?;
+
+    let result = vade
+        .vc_zkp_verify_proof(EVAN_METHOD, &type_options, &verify_proof_json)
         .await?;
 
-    
-    let proof_verification: ProofVerification = serde_json::from_str(&result[0].as_ref().ok_or("Invalid ProofVerification Returned")?)?;
+    let proof_verification: ProofVerification = serde_json::from_str(
+        &result[0]
+            .as_ref()
+            .ok_or("Invalid ProofVerification returned")?,
+    )?;
     assert_eq!(proof_verification.verified, true);
     Ok(())
 }
-

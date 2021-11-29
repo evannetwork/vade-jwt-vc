@@ -18,7 +18,12 @@ use crate::{
     crypto::crypto_utils::{check_assertion_proof, create_assertion_proof},
     crypto::signing::{LocalSigner, Signer},
     datatypes::{
-        Credential, IssueCredentialPayload, ProofVerification, SignerOptions, VerifyProofPayload,
+        Credential,
+        IssueCredentialPayload,
+        ProofVerification,
+        SignerOptions,
+        TypeOptions,
+        VerifyProofPayload,
     },
 };
 use async_trait::async_trait;
@@ -26,13 +31,27 @@ use std::error::Error;
 use vade::{VadePlugin, VadePluginResultValue};
 
 const EVAN_METHOD: &str = "did:evan";
+const PROOF_METHOD_JWT: &str = "jwt";
+
 pub struct VadeJwtVC {}
 
+macro_rules! parse {
+    ($data:expr, $type_name:expr) => {{
+        serde_json::from_str($data)
+            .map_err(|e| format!("{} when parsing {} {}", &e, $type_name, $data))?
+    }};
+}
+
 macro_rules! ignore_unrelated {
-    ($method:expr) => {{
+    ($method:expr, $options:expr) => {{
         if $method != EVAN_METHOD {
             return Ok(VadePluginResultValue::Ignored);
         }
+        let type_options: TypeOptions = parse!($options, "options");
+        match type_options.r#type.as_deref() {
+            Some(PROOF_METHOD_JWT) => (),
+            _ => return Ok(VadePluginResultValue::Ignored),
+        };
     }};
 }
 
@@ -71,9 +90,10 @@ impl VadePlugin for VadeJwtVC {
         options: &str,
         payload: &str,
     ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
-        ignore_unrelated!(method);
-        let issue_credential_payload: IssueCredentialPayload = serde_json::from_str(payload)?;
+        ignore_unrelated!(method, &options);
+
         let options: SignerOptions = serde_json::from_str(options)?;
+        let issue_credential_payload: IssueCredentialPayload = serde_json::from_str(payload)?;
         let signer: Box<dyn Signer> = Box::new(LocalSigner::new());
 
         let proof = create_assertion_proof(
@@ -107,7 +127,7 @@ impl VadePlugin for VadeJwtVC {
     /// # Arguments
     ///
     /// * `method` - method to verify a proof for (e.g. "did:example")
-    /// * `_options` - _options not required for vc_zkp_verify_proof, it should be left empty e.g: => "{}"
+    /// * `options` - serialized [`TypeOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.TypeOptions.html)
     /// * `payload` - serialized [`VerifyProofPayload`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.VerifyProofPayload.html)
     ///
     /// # Returns
@@ -115,10 +135,10 @@ impl VadePlugin for VadeJwtVC {
     async fn vc_zkp_verify_proof(
         &mut self,
         method: &str,
-        _options: &str,
+        options: &str,
         payload: &str,
     ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
-        ignore_unrelated!(method);
+        ignore_unrelated!(method, options);
 
         let verify_proof_payload: VerifyProofPayload = serde_json::from_str(payload)?;
 
