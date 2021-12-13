@@ -77,7 +77,7 @@ impl Issuer {
         let document_to_sign = serde_json::to_value(&unfinished_revocation_list)?;
         let proof = create_assertion_proof(
             &document_to_sign,
-            &issuer_public_key_did,
+            issuer_public_key_did,
             issuer_did,
             issuer_proving_key,
             signer,
@@ -146,7 +146,7 @@ impl Issuer {
         let document_to_sign = serde_json::to_value(&revocation_list)?;
         let proof = create_assertion_proof(
             &document_to_sign,
-            &issuer_public_key_did,
+            issuer_public_key_did,
             issuer,
             issuer_proving_key,
             signer,
