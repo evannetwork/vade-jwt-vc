@@ -26,6 +26,21 @@ pub fn get_now_as_iso_string() -> String {
     return Utc::now().format("%Y-%m-%dT%H:%M:%S.000Z").to_string();
 }
 
+#[allow(dead_code)]
+pub fn decode_base64<T: AsRef<[u8]>>(
+    encoded: T,
+    error_message_context: &str,
+) -> Result<Vec<u8>, Box<dyn Error>> {
+    let decoded = base64::decode(encoded).map_err(|_| {
+        format!(
+            "Error interpreting {} as base64. Wrong encoding?",
+            error_message_context
+        )
+    })?;
+
+    Ok(decoded)
+}
+
 pub fn decode_base64_config<T: AsRef<[u8]>>(
     encoded: T,
     config: Config,

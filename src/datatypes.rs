@@ -18,6 +18,10 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub const CREDENTIAL_PROOF_PURPOSE: &str = "assertionMethod";
+pub const DEFAULT_REVOCATION_CONTEXTS: [&'static str; 2] = [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/vc-revocation-list-2020/v1",
+];
 
 /// Message passed to vade containing the desired credential type.
 /// Does not perform action if type does not indicate credential type jwt.
@@ -148,4 +152,88 @@ pub struct SignerOptions {
     pub private_key: String,
     /// DID of the identity
     pub identity: String,
+}
+
+/// API payload needed to create a revocation list
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateRevocationListPayload {
+    /// DID of the issuer
+    pub issuer_did: String,
+    /// DID of the issuer's public key used to verify the credential's signature
+    pub issuer_public_key_did: String,
+    /// Private key of the issuer used to sign the credential
+    pub issuer_proving_key: String,
+    /// future did id for revocation list
+    pub credential_did: String,
+}
+
+/// API payload to revoke a credential as this credential's issuer.
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RevokeCredentialPayload {
+    /// DID of the issuer
+    pub issuer: String,
+    /// revocation list credential
+    pub revocation_list: RevocationListCredential,
+    /// Credential ID to revoke
+    pub revocation_id: String,
+    /// DID of the issuer's public key for verifying assertion proofs
+    pub issuer_public_key_did: String,
+    /// DID of the issuer's secret key for creating assertion proofs
+    pub issuer_proving_key: String,
+}
+
+/// A revocation list credential associating verifiable credential revocation IDs to their revocation status as a bit list. See
+/// <https://w3c-ccg.github.io/vc-status-rl-2020/#revocationlist2020credential>
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RevocationListCredential {
+    #[serde(rename(serialize = "@context", deserialize = "@context"))]
+    pub context: Vec<String>,
+    pub id: String,
+    pub r#type: Vec<String>,
+    pub issuer: String,
+    pub issued: String,
+    pub credential_subject: RevocationListCredentialSubject,
+    pub proof: AssertionProof,
+}
+
+impl RevocationListCredential {
+    pub fn new(
+        list: UnproofedRevocationListCredential,
+        proof: AssertionProof,
+    ) -> RevocationListCredential {
+        RevocationListCredential {
+            context: list.context,
+            id: list.id,
+            r#type: list.r#type,
+            issuer: list.issuer,
+            issued: list.issued,
+            credential_subject: list.credential_subject,
+            proof,
+        }
+    }
+}
+
+/// Payload part of a revocation list credential.
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RevocationListCredentialSubject {
+    pub id: String,
+    pub r#type: String,
+    pub encoded_list: String,
+}
+
+/// `RevocationListCredential` without a proof (for internal use only).
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct UnproofedRevocationListCredential {
+    #[serde(rename(serialize = "@context", deserialize = "@context"))]
+    pub context: Vec<String>,
+    pub id: String,
+    pub r#type: Vec<String>,
+    pub issuer: String,
+    pub issued: String,
+    pub credential_subject: RevocationListCredentialSubject,
 }

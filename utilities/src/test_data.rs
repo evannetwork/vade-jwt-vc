@@ -56,6 +56,35 @@ pub mod accounts {
 #[allow(dead_code)]
 pub mod jwt_coherent_context_test_data {
 
+    pub const EXAMPLE_REVOCATION_LIST_DID: &str =
+    "did:evan:zkp:0x1234512345123451234512345123456789";
+
+    pub const REVOCATION_LIST_CREDENTIAL: &str = r###"{
+        "@context":[
+            "https://www.w3.org/2018/credentials/v1",
+            "https://w3id.org/vc-status-list-2021/v1"
+        ],
+        "id":"did:evan:zkp:0x1234512345123451234512345123456789",
+        "type":[
+            "VerifiableCredential",
+            "StatusList2021Credential"
+        ],
+        "issuer":"did:evan:testcore:0x6240cedfc840579b7fdcd686bdc65a9a8c42dea6#key-1",
+        "issued":"2021-03-15T06:53:13.000Z",
+        "credentialSubject":{
+            "id":"did:evan:zkp:0x1234512345123451234512345123456789#list",
+            "type":"RevocationList2021",
+            "encodedList":"H4sIAAAAAAAA_-3AMQEAAADCoPVPbQwfKAAAAAAAAAAAAAAAAAAAAOBthtJUqwBAAAA="
+        },
+        "proof":{
+            "type":"EcdsaPublicKeySecp256k1",
+            "created":"2021-03-15T06:53:13.000Z",
+            "proofPurpose":"assertionMethod",
+            "verificationMethod":"did:evan:testcore:0x6240cedfc840579b7fdcd686bdc65a9a8c42dea6#key-1",
+            "jws":"eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NkstUiJ9.eyJpYXQiOiIyMDIxLTAzLTE1VDA2OjUzOjEzLjAwMFoiLCJkb2MiOnsiQGNvbnRleHQiOlsiaHR0cHM6Ly93d3cudzMub3JnLzIwMTgvY3JlZGVudGlhbHMvdjEiLCJodHRwczovL3czaWQub3JnL3ZjLXN0YXR1cy1saXN0LTIwMjEvdjEiXSwiaWQiOiJkaWQ6ZXZhbjp6a3A6MHgxMjM0NTEyMzQ1MTIzNDUxMjM0NTEyMzQ1MTIzNDU2Nzg5IiwidHlwZSI6WyJWZXJpZmlhYmxlQ3JlZGVudGlhbCIsIlN0YXR1c0xpc3QyMDIxQ3JlZGVudGlhbCJdLCJpc3N1ZXIiOiJkaWQ6ZXZhbjp0ZXN0Y29yZToweDYyNDBjZWRmYzg0MDU3OWI3ZmRjZDY4NmJkYzY1YTlhOGM0MmRlYTYja2V5LTEiLCJpc3N1ZWQiOiIyMDIxLTAzLTE1VDA2OjUzOjEzLjAwMFoiLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDpldmFuOnprcDoweDEyMzQ1MTIzNDUxMjM0NTEyMzQ1MTIzNDUxMjM0NTY3ODkjbGlzdCIsInR5cGUiOiJSZXZvY2F0aW9uTGlzdDIwMjEiLCJlbmNvZGVkTGlzdCI6Ikg0c0lBQUFBQUFBQV8tM0FNUUVBQUFEQ29QVlBiUXdmS0FBQUFBQUFBQUFBQUFBQUFBQUFBT0J0aHRKVXF3QkFBQUE9In19LCJpc3MiOiJkaWQ6ZXZhbjp0ZXN0Y29yZToweDYyNDBjZWRmYzg0MDU3OWI3ZmRjZDY4NmJkYzY1YTlhOGM0MmRlYTYifQ.F98jOR5Cs9HEe4gz6RRc0Unnc-YkX_PUWs20eLrrlqgkN4g7OKNcAlxqo4ARPKU2oqWMq5NWO3Fj2rK8dMZnDQA"
+        }
+    }"###;
+    
     pub const UNSIGNED_CREDENTIAL: &str = r###"{
         "@context":[
            "https://www.w3.org/2018/credentials/v1",
