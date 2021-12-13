@@ -78,9 +78,9 @@ impl Issuer {
         let proof = create_assertion_proof(
             &document_to_sign,
             &issuer_public_key_did,
-            &issuer_did,
-            &issuer_proving_key,
-            &signer,
+            issuer_did,
+            issuer_proving_key,
+            signer,
         )
         .await?;
 
@@ -147,9 +147,9 @@ impl Issuer {
         let proof = create_assertion_proof(
             &document_to_sign,
             &issuer_public_key_did,
-            &issuer,
-            &issuer_proving_key,
-            &signer,
+            issuer,
+            issuer_proving_key,
+            signer,
         )
         .await?;
 

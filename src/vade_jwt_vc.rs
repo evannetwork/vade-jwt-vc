@@ -83,7 +83,7 @@ impl VadePlugin for VadeJwtVC {
         options: &str,
         payload: &str,
     ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
-        ignore_unrelated!(method, &options);
+        ignore_unrelated!(method, options);
 
         let options: SignerOptions = serde_json::from_str(options)?;
         let issue_credential_payload: IssueCredentialPayload = serde_json::from_str(payload)?;
@@ -170,7 +170,7 @@ impl VadePlugin for VadeJwtVC {
         payload: &str,
     ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
         ignore_unrelated!(method, options);
-        let payload: CreateRevocationListPayload = parse!(&payload, "payload");
+        let payload: CreateRevocationListPayload = parse!(payload, "payload");
 
         let revocation_list = Issuer::create_revocation_list(
             &payload.credential_did,
@@ -208,7 +208,7 @@ impl VadePlugin for VadeJwtVC {
         payload: &str,
     ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
         ignore_unrelated!(method, options);
-        let payload: RevokeCredentialPayload = parse!(&payload, "payload");
+        let payload: RevokeCredentialPayload = parse!(payload, "payload");
         let updated_list = Issuer::revoke_credential(
             &payload.issuer,
             payload.revocation_list,
