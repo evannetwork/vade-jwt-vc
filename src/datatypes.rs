@@ -142,6 +142,8 @@ pub struct VerifyProofPayload {
     pub credential: Credential,
     /// Signer address
     pub signer_address: String,
+    /// revocation list credential
+    pub revocation_list: RevocationListCredential,
 }
 
 /// Contains necessary information to sign the data

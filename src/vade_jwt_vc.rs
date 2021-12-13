@@ -15,7 +15,10 @@
 */
 
 use crate::{
-    crypto::crypto_utils::{check_assertion_proof, create_assertion_proof},
+    crypto::{
+        crypto_utils::{check_assertion_proof, create_assertion_proof},
+        crypto_verifier::CryptoVerifier,
+    },
     datatypes::{
         CreateRevocationListPayload, Credential, IssueCredentialPayload, ProofVerification,
         RevokeCredentialPayload, SignerOptions, TypeOptions, VerifyProofPayload,
@@ -133,6 +136,16 @@ impl VadePlugin for VadeJwtVC {
         ignore_unrelated!(method, options);
 
         let verify_proof_payload: VerifyProofPayload = serde_json::from_str(payload)?;
+        let revoked = CryptoVerifier::is_revoked(
+            &verify_proof_payload.credential.credential_status,
+            &verify_proof_payload.revocation_list,
+        )?;
+        if revoked {
+            let verfication_result = ProofVerification { verified: false };
+            return Ok(VadePluginResultValue::Success(Some(serde_json::to_string(
+                &verfication_result,
+            )?)));
+        }
 
         let result = check_assertion_proof(
             &serde_json::to_string(&verify_proof_payload.credential)?,
@@ -158,7 +171,7 @@ impl VadePlugin for VadeJwtVC {
     /// # Arguments
     ///
     /// * `method` - method to create a revocation list for (e.g. "did:example")
-    /// * `options` - serialized [`AuthenticationOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.AuthenticationOptions.html)
+    /// * `options` - serialized [`TypeOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.AuthenticationOptions.html)
     /// * `payload` - serialized [`CreateRevocationListPayload`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.CreateRevocationListPayload.html)
     ///
     /// # Returns
@@ -195,7 +208,7 @@ impl VadePlugin for VadeJwtVC {
     /// # Arguments
     ///
     /// * `method` - method to revoke a credential for (e.g. "did:example")
-    /// * `options` - serialized [`AuthenticationOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.AuthenticationOptions.html)
+    /// * `options` - serialized [`TypeOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.AuthenticationOptions.html)
     /// * `payload` - serialized [`RevokeCredentialPayload`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.RevokeCredentialPayload.html)
     ///
     /// # Returns

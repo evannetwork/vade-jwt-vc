@@ -16,7 +16,10 @@
 
 use std::error::Error;
 use utilities::test_data::{
-    accounts::local::{ISSUER_DID, SIGNER_1_ADDRESS, SIGNER_1_DID, SIGNER_1_PRIVATE_KEY},
+    accounts::local::{
+        ISSUER_DID, ISSUER_PRIVATE_KEY, ISSUER_PUBLIC_KEY_DID, SIGNER_1_ADDRESS, SIGNER_1_DID,
+        SIGNER_1_PRIVATE_KEY,
+    },
     jwt_coherent_context_test_data::{PUB_KEY, UNSIGNED_CREDENTIAL},
 };
 use vade::Vade;
@@ -24,8 +27,8 @@ use vade::Vade;
 use vade_evan_substrate::signing::{LocalSigner, Signer};
 use vade_jwt_vc::{
     datatypes::{
-        Credential, IssueCredentialPayload, ProofVerification, TypeOptions, UnsignedCredential,
-        VerifyProofPayload,
+        Credential, IssueCredentialPayload, ProofVerification, RevocationListCredential,
+        TypeOptions, UnsignedCredential, VerifyProofPayload,
     },
     VadeJwtVC,
 };
@@ -77,6 +80,29 @@ async fn create_unfinished_credential(vade: &mut Vade) -> Result<Credential, Box
     Ok(credential)
 }
 
+async fn create_revocation_list(
+    vade: &mut Vade,
+) -> Result<RevocationListCredential, Box<dyn Error>> {
+    let payload = format!(
+        r###"{{
+        "issuerDid": "{}",
+        "issuerPublicKeyDid": "{}",
+        "issuerProvingKey": "{}",
+        "credentialDid": "did:evan:revocation123"
+    }}"###,
+        ISSUER_DID, ISSUER_PUBLIC_KEY_DID, ISSUER_PRIVATE_KEY
+    );
+    let results = vade
+        .vc_zkp_create_revocation_registry_definition(EVAN_METHOD, &get_options(), &payload)
+        .await?;
+
+    // check results
+    assert_eq!(results.len(), 1);
+    let result: RevocationListCredential =
+        serde_json::from_str(results[0].as_ref().unwrap()).unwrap();
+    Ok(result)
+}
+
 fn get_unsigned_vc() -> Result<UnsignedCredential, Box<dyn Error>> {
     let unsigned_vc: UnsignedCredential = serde_json::from_str(UNSIGNED_CREDENTIAL)?;
     return Ok(unsigned_vc);
@@ -85,12 +111,13 @@ fn get_unsigned_vc() -> Result<UnsignedCredential, Box<dyn Error>> {
 #[tokio::test]
 async fn vade_jwt_vc_can_issue_and_verify_a_credential() -> Result<(), Box<dyn Error>> {
     let mut vade = get_vade();
-
+    let revocation_list = create_revocation_list(&mut vade).await?;
     let credential = create_unfinished_credential(&mut vade).await?;
     // verify proof
     let verify_proof_payload = VerifyProofPayload {
         credential,
         signer_address: SIGNER_1_ADDRESS.to_string(),
+        revocation_list: revocation_list.clone(),
     };
 
     let verify_proof_json = serde_json::to_string(&verify_proof_payload)?;
