@@ -117,7 +117,7 @@ async fn vade_jwt_vc_can_issue_and_verify_a_credential() -> Result<(), Box<dyn E
     let verify_proof_payload = VerifyProofPayload {
         credential,
         signer_address: SIGNER_1_ADDRESS.to_string(),
-        revocation_list: revocation_list.clone(),
+        revocation_list: Some(revocation_list.clone()),
     };
 
     let verify_proof_json = serde_json::to_string(&verify_proof_payload)?;

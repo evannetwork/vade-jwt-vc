@@ -136,16 +136,22 @@ impl VadePlugin for VadeJwtVC {
         ignore_unrelated!(method, options);
 
         let verify_proof_payload: VerifyProofPayload = serde_json::from_str(payload)?;
-        let revoked = CryptoVerifier::is_revoked(
-            &verify_proof_payload.credential.credential_status,
-            &verify_proof_payload.revocation_list,
-        )?;
-        if revoked {
-            let verfication_result = ProofVerification { verified: false };
-            return Ok(VadePluginResultValue::Success(Some(serde_json::to_string(
-                &verfication_result,
-            )?)));
-        }
+
+        match verify_proof_payload.revocation_list {
+            Some(value) => {
+                let revoked = CryptoVerifier::is_revoked(
+                    &verify_proof_payload.credential.credential_status,
+                    &value,
+                )?;
+                if revoked {
+                    let verfication_result = ProofVerification { verified: false };
+                    return Ok(VadePluginResultValue::Success(Some(serde_json::to_string(
+                        &verfication_result,
+                    )?)));
+                }
+            }
+            _ => {}
+        };
 
         let result = check_assertion_proof(
             &serde_json::to_string(&verify_proof_payload.credential)?,
