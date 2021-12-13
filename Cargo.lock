@@ -1915,7 +1915,7 @@ dependencies = [
 
 [[package]]
 name = "vade-jwt-vc"
-version = "0.0.3"
+version = "0.0.1"
 dependencies = [
  "async-trait",
  "base64",
