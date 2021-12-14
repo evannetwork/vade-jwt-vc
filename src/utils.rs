@@ -26,7 +26,6 @@ pub fn get_now_as_iso_string() -> String {
     return Utc::now().format("%Y-%m-%dT%H:%M:%S.000Z").to_string();
 }
 
-#[allow(dead_code)]
 pub fn decode_base64<T: AsRef<[u8]>>(
     encoded: T,
     error_message_context: &str,

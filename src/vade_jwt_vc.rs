@@ -171,11 +171,9 @@ impl VadePlugin for VadeJwtVC {
         )?)))
     }
 
-    /// Creates a new revocation list and stores it on-chain. The list consists of a encoded bit list which can
+    /// Creates a new revocation list. The list consists of a encoded bit list which can
     /// hold up to 131,072 revokable ids. The list is GZIP encoded and will be updated on every revocation.
     /// The output is a W3C credential with a JWS signature by the given key.
-    ///
-    /// Note that `options.identity` needs to be whitelisted for this function.
     ///
     /// # Arguments
     ///
@@ -209,10 +207,7 @@ impl VadePlugin for VadeJwtVC {
     }
 
     /// Revokes a credential. The information returned by this function needs to be persisted in order to update the revocation list. To revoke a credential, the revoker must be in possession of the private key associated
-    /// with the credential's revocation list. After revocation, the published revocation list is updated on-chain.
-    /// Only then is the credential truly revoked.
-    ///
-    /// Note that `options.identity` needs to be whitelisted for this function.
+    /// with the credential's revocation list.
     ///
     /// # Arguments
     ///

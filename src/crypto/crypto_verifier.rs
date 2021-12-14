@@ -28,12 +28,11 @@ impl CryptoVerifier {
     /// Checks if a given credential is revoked in the given revocation list
     ///
     /// # Arguments
-    /// * `credential` - BbsCredential which has to be checked
+    /// * `credential_status` - Credential which has to be checked
     /// * `revocation_list` - Revocation list the credential belongs to
     ///
     /// # Returns
     /// * `bool` - bool value if the credential is revoked or not
-
     pub fn is_revoked(
         credential_status: &CredentialStatus,
         revocation_list: &RevocationListCredential,
@@ -60,7 +59,6 @@ impl CryptoVerifier {
 }
 
 #[cfg(test)]
-
 mod tests {
     extern crate utilities;
 
