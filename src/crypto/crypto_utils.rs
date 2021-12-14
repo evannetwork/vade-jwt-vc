@@ -15,7 +15,6 @@
 */
 
 use crate::{
-    crypto::signing::Signer,
     datatypes::AssertionProof,
     utils::{decode_base64_config, get_now_as_iso_string},
 };
@@ -26,6 +25,7 @@ use serde_json::{value::RawValue, Value};
 use sha2::{Digest, Sha256};
 use sha3::Keccak256;
 use std::{convert::TryInto, error::Error};
+use vade_evan_substrate::signing::Signer;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct JwsData<'a> {

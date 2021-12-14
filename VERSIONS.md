@@ -4,6 +4,8 @@
 
 ### Features
 
+
+- Changed the code to support external signer.
 ### Fixes
 
 ### Deprecations

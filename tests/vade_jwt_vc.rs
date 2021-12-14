@@ -21,13 +21,10 @@ use utilities::test_data::{
 };
 use vade::Vade;
 
+use vade_evan_substrate::signing::{LocalSigner, Signer};
 use vade_jwt_vc::{
     datatypes::{
-        Credential,
-        IssueCredentialPayload,
-        ProofVerification,
-        TypeOptions,
-        UnsignedCredential,
+        Credential, IssueCredentialPayload, ProofVerification, TypeOptions, UnsignedCredential,
         VerifyProofPayload,
     },
     VadeJwtVC,
@@ -43,7 +40,8 @@ fn get_vade() -> Vade {
 }
 
 fn get_vade_jwt() -> VadeJwtVC {
-    VadeJwtVC::new()
+    let signer: Box<dyn Signer> = Box::new(LocalSigner::new());
+    VadeJwtVC::new(signer)
 }
 
 fn get_options() -> String {
