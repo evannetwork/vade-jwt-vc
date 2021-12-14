@@ -4,7 +4,6 @@
 
 ### Features
 
-https://git.slock.it/equs/interop/vade/vade-jwt-vc/-/merge_requests/4
 
 - Changed the code to support external signer.
 ### Fixes
