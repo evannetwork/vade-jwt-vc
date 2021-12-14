@@ -70,15 +70,15 @@ pub mod jwt_coherent_context_test_data {
            "VerifiableCredential"
         ],
         "issuer":"did:evan:testcore:0x6240cedfc840579b7fdcd686bdc65a9a8c42dea6",
-        "issuanceDate": "2021-04-20T08:35:56+0000",
+        "issuanceDate":"2021-04-20T08:35:56+0000",
         "credentialSubject":{
            "id":"did:evan:testcore:0x67ce8b01b3b75a9ba4a1462139a1edaa0d2f539f",
            "data":{
-              "test_property_string4":"value",
+              "test_property_string3":"value",
               "test_property_string":"value",
               "test_property_string2":"value",
-              "test_property_string1":"value",
-              "test_property_string3":"value"
+              "test_property_string4":"value",
+              "test_property_string1":"value"
            }
         },
         "credentialSchema":{
@@ -88,19 +88,15 @@ pub mod jwt_coherent_context_test_data {
         "credentialStatus":{
            "id":"did:evan:zkp:0xcac3f4186e273083820c8c59f3c52efb713a755de255d0eb997b4990253ea388#0",
            "type":"RevocationList2021Status",
-           "revocationListIndex": "1",
+           "revocationListIndex":"1",
            "revocationListCredential":"did:evan:zkp:0xcac3f4186e273083820c8c59f3c52efb713a755de255d0eb997b4990253ea388"
         },
         "proof":{
-           "type":"BbsBlsSignature2020",
-           "created":"2021-04-13T12:53:18.000Z",
+           "type":"EcdsaPublicKeySecp256k1",
+           "created":"2021-12-14T14:20:50.000Z",
            "proofPurpose":"assertionMethod",
            "verificationMethod":"did:evan:testcore:0x6240cedfc840579b7fdcd686bdc65a9a8c42dea6#key-1",
-           "credentialMessageCount": 6,
-           "requiredRevealStatements":[
-              1
-           ],
-           "jws":"oE+ETDgwAaCqmtqBhuKgft2CiCO92+hgG3uNr+GmVgRy9HLN/6SLktVURqw7AzlvbRiQqKoa65eVk++gdvY4Dj34MIOnNFMRAqQB2S0y1MliczPHpGAAlQkz6IzrPhwjfq9ZO9FlXdd4OwbfHRaJtA=="
+           "jws":"eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NkstUiJ9.eyJpYXQiOiIyMDIxLTEyLTE0VDE0OjIwOjUwLjAwMFoiLCJkb2MiOnsiQGNvbnRleHQiOlsiaHR0cHM6Ly93d3cudzMub3JnLzIwMTgvY3JlZGVudGlhbHMvdjEiLCJodHRwczo6Ly9zY2hlbWEub3JnIiwiaHR0cHM6Ly93M2lkLm9yZy92Yy1zdGF0dXMtbGlzdC0yMDIxL3YxIl0sImlkIjoiOTQ0NTBjNzItNWRjNC00ZTQ2LThkZjAtMTA2ODE5MDY0NjU2IiwidHlwZSI6WyJWZXJpZmlhYmxlQ3JlZGVudGlhbCJdLCJpc3N1ZXIiOiJkaWQ6ZXZhbjp0ZXN0Y29yZToweDYyNDBjZWRmYzg0MDU3OWI3ZmRjZDY4NmJkYzY1YTlhOGM0MmRlYTYiLCJpc3N1YW5jZURhdGUiOiIyMDIxLTA0LTIwVDA4OjM1OjU2KzAwMDAiLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDpldmFuOnRlc3Rjb3JlOjB4NjdjZThiMDFiM2I3NWE5YmE0YTE0NjIxMzlhMWVkYWEwZDJmNTM5ZiIsImRhdGEiOnsidGVzdF9wcm9wZXJ0eV9zdHJpbmczIjoidmFsdWUiLCJ0ZXN0X3Byb3BlcnR5X3N0cmluZzIiOiJ2YWx1ZSIsInRlc3RfcHJvcGVydHlfc3RyaW5nMSI6InZhbHVlIiwidGVzdF9wcm9wZXJ0eV9zdHJpbmciOiJ2YWx1ZSIsInRlc3RfcHJvcGVydHlfc3RyaW5nNCI6InZhbHVlIn19LCJjcmVkZW50aWFsU2NoZW1hIjp7ImlkIjoiZGlkOmV2YW46emtwOjB4ZDY0MWMyNjE2MWU3NjljZWY0YjQxNzYwMjExOTcyYjI3NGE4ZjM3ZjEzNWEzNDA4M2U0ZTQ4YjNmMTAzNWVkYSIsInR5cGUiOiJFdmFuWktQU2NoZW1hIn0sImNyZWRlbnRpYWxTdGF0dXMiOnsiaWQiOiJkaWQ6ZXZhbjp6a3A6MHhjYWMzZjQxODZlMjczMDgzODIwYzhjNTlmM2M1MmVmYjcxM2E3NTVkZTI1NWQwZWI5OTdiNDk5MDI1M2VhMzg4IzAiLCJ0eXBlIjoiUmV2b2NhdGlvbkxpc3QyMDIxU3RhdHVzIiwicmV2b2NhdGlvbkxpc3RJbmRleCI6IjEiLCJyZXZvY2F0aW9uTGlzdENyZWRlbnRpYWwiOiJkaWQ6ZXZhbjp6a3A6MHhjYWMzZjQxODZlMjczMDgzODIwYzhjNTlmM2M1MmVmYjcxM2E3NTVkZTI1NWQwZWI5OTdiNDk5MDI1M2VhMzg4In19LCJpc3MiOiJkaWQ6ZXZhbjp0ZXN0Y29yZToweDYyNDBjZWRmYzg0MDU3OWI3ZmRjZDY4NmJkYzY1YTlhOGM0MmRlYTYifQ.aVr434yDZJjoTWpgcTw27ThXOuJNGIsHMbXpX_3-j19FY1uQVLILWHZaMlqlWSexSs2Q4c-PvXfzMMsj1aUOCQA"
         }
      }"###;
 
