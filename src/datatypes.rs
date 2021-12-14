@@ -68,7 +68,7 @@ pub struct Credential {
     pub issuance_date: String,
     pub credential_subject: CredentialSubject,
     pub credential_schema: CredentialSchemaReference,
-    pub credential_status: CredentialStatus,
+    pub credential_status: Option<CredentialStatus>,
     pub proof: AssertionProof,
 }
 
@@ -86,7 +86,7 @@ pub struct UnsignedCredential {
     pub issuance_date: String,
     pub credential_subject: CredentialSubject,
     pub credential_schema: CredentialSchemaReference,
-    pub credential_status: CredentialStatus,
+    pub credential_status: Option<CredentialStatus>,
 }
 
 /// Payload/data part of a verifiable credential.

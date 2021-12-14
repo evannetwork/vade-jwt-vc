@@ -76,7 +76,12 @@ mod tests {
         let revocation_list: RevocationListCredential =
             serde_json::from_str(&REVOCATION_LIST_CREDENTIAL)?;
 
-        match CryptoVerifier::is_revoked(&credential.credential_status, &revocation_list) {
+        match CryptoVerifier::is_revoked(
+            &credential
+                .credential_status
+                .ok_or("CredentialStatus required to check revocation status")?,
+            &revocation_list,
+        ) {
             Ok(revoked) => assert_eq!(false, revoked),
             Err(e) => assert!(false, "Unexpected error: {}", e),
         };
@@ -89,7 +94,12 @@ mod tests {
         let revocation_list: RevocationListCredential =
             serde_json::from_str(&REVOCATION_LIST_CREDENTIAL_REVOKED_ID_1)?;
 
-        match CryptoVerifier::is_revoked(&credential.credential_status, &revocation_list) {
+        match CryptoVerifier::is_revoked(
+            &credential
+                .credential_status
+                .ok_or("CredentialStatus required to check revocation status")?,
+            &revocation_list,
+        ) {
             Ok(revoked) => assert_eq!(true, revoked),
             Err(e) => assert!(false, "Unexpected error: {}", e),
         };

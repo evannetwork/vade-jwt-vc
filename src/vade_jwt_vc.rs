@@ -136,11 +136,14 @@ impl VadePlugin for VadeJwtVC {
         ignore_unrelated!(method, options);
 
         let verify_proof_payload: VerifyProofPayload = serde_json::from_str(payload)?;
-
         match verify_proof_payload.revocation_list {
             Some(value) => {
                 let revoked = CryptoVerifier::is_revoked(
-                    &verify_proof_payload.credential.credential_status,
+                    &verify_proof_payload
+                        .credential
+                        .credential_status
+                        .clone()
+                        .ok_or("CredentialStatus required to check revocation status")?,
                     &value,
                 )?;
                 if revoked {
