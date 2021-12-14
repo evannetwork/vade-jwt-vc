@@ -39,6 +39,7 @@ extern crate log;
 
 pub(crate) mod crypto;
 pub mod datatypes;
+pub(crate) mod issuer;
 mod utils;
 
 mod vade_jwt_vc;
