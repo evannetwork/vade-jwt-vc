@@ -15,4 +15,4 @@
 */
 
 pub mod crypto_utils;
-pub mod signing;
+pub mod crypto_verifier;

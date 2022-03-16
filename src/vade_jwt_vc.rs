@@ -15,25 +15,27 @@
 */
 
 use crate::{
-    crypto::crypto_utils::{check_assertion_proof, create_assertion_proof},
-    crypto::signing::{LocalSigner, Signer},
-    datatypes::{
-        Credential,
-        IssueCredentialPayload,
-        ProofVerification,
-        SignerOptions,
-        TypeOptions,
-        VerifyProofPayload,
+    crypto::{
+        crypto_utils::{check_assertion_proof, create_assertion_proof},
+        crypto_verifier::CryptoVerifier,
     },
+    datatypes::{
+        CreateRevocationListPayload, Credential, IssueCredentialPayload, ProofVerification,
+        RevokeCredentialPayload, SignerOptions, TypeOptions, VerifyProofPayload,
+    },
+    issuer::Issuer,
 };
 use async_trait::async_trait;
 use std::error::Error;
 use vade::{VadePlugin, VadePluginResultValue};
+use vade_evan_substrate::signing::Signer;
 
 const EVAN_METHOD: &str = "did:evan";
 const PROOF_METHOD_JWT: &str = "jwt";
 
-pub struct VadeJwtVC {}
+pub struct VadeJwtVC {
+    signer: Box<dyn Signer>,
+}
 
 macro_rules! parse {
     ($data:expr, $type_name:expr) => {{
@@ -57,17 +59,11 @@ macro_rules! ignore_unrelated {
 
 impl VadeJwtVC {
     /// Creates new instance of `VadeJwtVC`.
-    pub fn new() -> VadeJwtVC {
+    pub fn new(signer: Box<dyn Signer>) -> VadeJwtVC {
         match env_logger::try_init() {
             Ok(_) | Err(_) => (),
         };
-        VadeJwtVC {}
-    }
-}
-
-impl Default for VadeJwtVC {
-    fn default() -> Self {
-        Self::new()
+        VadeJwtVC { signer }
     }
 }
 
@@ -90,18 +86,17 @@ impl VadePlugin for VadeJwtVC {
         options: &str,
         payload: &str,
     ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
-        ignore_unrelated!(method, &options);
+        ignore_unrelated!(method, options);
 
         let options: SignerOptions = serde_json::from_str(options)?;
         let issue_credential_payload: IssueCredentialPayload = serde_json::from_str(payload)?;
-        let signer: Box<dyn Signer> = Box::new(LocalSigner::new());
 
         let proof = create_assertion_proof(
             &serde_json::to_value(issue_credential_payload.unsigned_vc.clone())?,
             &issue_credential_payload.issuer_public_key_id,
             &issue_credential_payload.unsigned_vc.issuer,
             &options.private_key,
-            &signer,
+            &self.signer,
         )
         .await?;
 
@@ -141,6 +136,25 @@ impl VadePlugin for VadeJwtVC {
         ignore_unrelated!(method, options);
 
         let verify_proof_payload: VerifyProofPayload = serde_json::from_str(payload)?;
+        match verify_proof_payload.revocation_list {
+            Some(value) => {
+                let revoked = CryptoVerifier::is_revoked(
+                    &verify_proof_payload
+                        .credential
+                        .credential_status
+                        .clone()
+                        .ok_or("CredentialStatus required to check revocation status")?,
+                    &value,
+                )?;
+                if revoked {
+                    let verfication_result = ProofVerification { verified: false };
+                    return Ok(VadePluginResultValue::Success(Some(serde_json::to_string(
+                        &verfication_result,
+                    )?)));
+                }
+            }
+            _ => {}
+        };
 
         let result = check_assertion_proof(
             &serde_json::to_string(&verify_proof_payload.credential)?,
@@ -155,5 +169,75 @@ impl VadePlugin for VadeJwtVC {
         Ok(VadePluginResultValue::Success(Some(serde_json::to_string(
             &res,
         )?)))
+    }
+
+    /// Creates a new revocation list. The list consists of a encoded bit list which can
+    /// hold up to 131,072 revokable ids. The list is GZIP encoded and will be updated on every revocation.
+    /// The output is a W3C credential with a JWS signature by the given key.
+    ///
+    /// # Arguments
+    ///
+    /// * `method` - method to create a revocation list for (e.g. "did:example")
+    /// * `options` - serialized [`TypeOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.AuthenticationOptions.html)
+    /// * `payload` - serialized [`CreateRevocationListPayload`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.CreateRevocationListPayload.html)
+    ///
+    /// # Returns
+    /// * created revocation list as a JSON object as serialized [`RevocationList`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.RevocationList.html)
+    async fn vc_zkp_create_revocation_registry_definition(
+        &mut self,
+        method: &str,
+        options: &str,
+        payload: &str,
+    ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
+        ignore_unrelated!(method, options);
+        let payload: CreateRevocationListPayload = parse!(payload, "payload");
+
+        let revocation_list = Issuer::create_revocation_list(
+            &payload.credential_did,
+            &payload.issuer_did,
+            &payload.issuer_public_key_did,
+            &payload.issuer_proving_key,
+            &self.signer,
+        )
+        .await?;
+
+        let serialized_list = serde_json::to_string(&revocation_list)?;
+
+        Ok(VadePluginResultValue::Success(Some(serialized_list)))
+    }
+
+    /// Revokes a credential. The information returned by this function needs to be persisted in order to update the revocation list. To revoke a credential, the revoker must be in possession of the private key associated
+    /// with the credential's revocation list.
+    ///
+    /// # Arguments
+    ///
+    /// * `method` - method to revoke a credential for (e.g. "did:example")
+    /// * `options` - serialized [`TypeOptions`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.AuthenticationOptions.html)
+    /// * `payload` - serialized [`RevokeCredentialPayload`](https://docs.rs/vade_jwt_vc/*/vade_jwt_vc/struct.RevokeCredentialPayload.html)
+    ///
+    /// # Returns
+    /// * `Option<String>` - The updated revocation list as a JSON object. Contains information
+    /// needed to update the respective revocation list.
+    async fn vc_zkp_revoke_credential(
+        &mut self,
+        method: &str,
+        options: &str,
+        payload: &str,
+    ) -> Result<VadePluginResultValue<Option<String>>, Box<dyn Error>> {
+        ignore_unrelated!(method, options);
+        let payload: RevokeCredentialPayload = parse!(payload, "payload");
+        let updated_list = Issuer::revoke_credential(
+            &payload.issuer,
+            payload.revocation_list,
+            &payload.revocation_id,
+            &payload.issuer_public_key_did,
+            &payload.issuer_proving_key,
+            &self.signer,
+        )
+        .await?;
+
+        let serialized = serde_json::to_string(&updated_list)?;
+
+        Ok(VadePluginResultValue::Success(Some(serialized)))
     }
 }
