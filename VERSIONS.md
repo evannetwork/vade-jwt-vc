@@ -4,14 +4,17 @@
 
 ### Features
 
-- Changed the code to support external signer.
-
-- Added support for revocation of credentials
-
 ### Fixes
 
 ### Deprecations
 
+## v0.1.0
+
+### Features
+
+- Changed the code to support external signer.
+- Added support for revocation of credentials
+
 ## Initial Version
 
-- initial verson to issue, revoke and verify VC simple JWT signature based on SECP256K1 curve.
+- initial version to issue, revoke and verify VC simple JWT signature based on SECP256K1 curve.
