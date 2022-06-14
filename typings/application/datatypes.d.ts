@@ -85,7 +85,7 @@ export interface UnsignedCredential {
  * Payload/data part of a verifiable credential.
  */
 export interface CredentialSubject {
-  id: string;
+  id?: string;
   data: Record<string, string>;
 }
 
