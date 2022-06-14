@@ -1,0 +1,6 @@
+{
+  "name": "vade-jwt-vc-typings",
+  "version": "0.0.1",
+  "description": "typescript types for vade-jwt-vc",
+  "types": "./dist/src/index.d.ts"
+}
