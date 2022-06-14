@@ -147,9 +147,9 @@ impl VadePlugin for VadeJwtVC {
                     &value,
                 )?;
                 if revoked {
-                    let verfication_result = ProofVerification { verified: false };
+                    let verification_result = ProofVerification { verified: false };
                     return Ok(VadePluginResultValue::Success(Some(serde_json::to_string(
-                        &verfication_result,
+                        &verification_result,
                     )?)));
                 }
             }

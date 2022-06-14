@@ -4,6 +4,9 @@
 
 ### Features
 
+- add TypeScript typings
+- make credential subject id optional
+
 ### Fixes
 
 ### Deprecations
