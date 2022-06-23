@@ -106,6 +106,7 @@ impl VadePlugin for VadeJwtVC {
             r#type: issue_credential_payload.unsigned_vc.r#type,
             issuer: issue_credential_payload.unsigned_vc.issuer,
             issuance_date: issue_credential_payload.unsigned_vc.issuance_date,
+            valid_until: issue_credential_payload.unsigned_vc.valid_until,
             credential_subject: issue_credential_payload.unsigned_vc.credential_subject,
             credential_schema: issue_credential_payload.unsigned_vc.credential_schema,
             credential_status: issue_credential_payload.unsigned_vc.credential_status,
