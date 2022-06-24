@@ -56,6 +56,7 @@ export interface Credential {
   type: string[];
   issuer: string;
   issuanceDate: string;
+  validUntil?: string;
   credentialSubject: CredentialSubject;
   credentialSchema: CredentialSchemaReference;
   credentialStatus: CredentialStatus;
