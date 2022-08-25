@@ -7,6 +7,7 @@
 - add TypeScript typings
 - make credential subject id optional
 - add validUntil in the issued credential when passed
+- update signing to use `vade-signer` instead of `vade-evan-substrate`
 
 ### Fixes
 
