@@ -24,7 +24,6 @@ use utilities::test_data::{
 };
 use vade::Vade;
 
-use vade_evan_substrate::signing::{LocalSigner, Signer};
 use vade_jwt_vc::{
     datatypes::{
         Credential, IssueCredentialPayload, ProofVerification, RevocationListCredential,
@@ -32,6 +31,7 @@ use vade_jwt_vc::{
     },
     VadeJwtVC,
 };
+use vade_signer::{LocalSigner, Signer};
 
 const PROOF_METHOD_JWT: &str = "jwt";
 const EVAN_METHOD: &str = "did:evan";
