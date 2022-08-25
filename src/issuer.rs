@@ -25,7 +25,7 @@ use crate::{
 
 use flate2::{read::GzDecoder, write::GzEncoder, Compression};
 use std::{error::Error, io::prelude::*};
-use vade_evan_substrate::signing::Signer;
+use vade_signer::Signer;
 
 pub struct Issuer {}
 
@@ -168,7 +168,7 @@ mod tests {
         accounts::local::{ISSUER_DID, ISSUER_PRIVATE_KEY, ISSUER_PUBLIC_KEY_DID},
         jwt_coherent_context_test_data::{EXAMPLE_REVOCATION_LIST_DID, REVOCATION_LIST_CREDENTIAL},
     };
-    use vade_evan_substrate::signing::{LocalSigner, Signer};
+    use vade_signer::{LocalSigner, Signer};
 
     #[tokio::test]
     async fn revocation_can_create_revocation_registry() -> Result<(), Box<dyn Error>> {

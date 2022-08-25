@@ -28,7 +28,7 @@ use crate::{
 use async_trait::async_trait;
 use std::error::Error;
 use vade::{VadePlugin, VadePluginResultValue};
-use vade_evan_substrate::signing::Signer;
+use vade_signer::Signer;
 
 const EVAN_METHOD: &str = "did:evan";
 const PROOF_METHOD_JWT: &str = "jwt";
@@ -106,6 +106,7 @@ impl VadePlugin for VadeJwtVC {
             r#type: issue_credential_payload.unsigned_vc.r#type,
             issuer: issue_credential_payload.unsigned_vc.issuer,
             issuance_date: issue_credential_payload.unsigned_vc.issuance_date,
+            valid_until: issue_credential_payload.unsigned_vc.valid_until,
             credential_subject: issue_credential_payload.unsigned_vc.credential_subject,
             credential_schema: issue_credential_payload.unsigned_vc.credential_schema,
             credential_status: issue_credential_payload.unsigned_vc.credential_status,
@@ -147,9 +148,9 @@ impl VadePlugin for VadeJwtVC {
                     &value,
                 )?;
                 if revoked {
-                    let verfication_result = ProofVerification { verified: false };
+                    let verification_result = ProofVerification { verified: false };
                     return Ok(VadePluginResultValue::Success(Some(serde_json::to_string(
-                        &verfication_result,
+                        &verification_result,
                     )?)));
                 }
             }

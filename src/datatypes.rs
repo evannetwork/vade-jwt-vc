@@ -66,6 +66,8 @@ pub struct Credential {
     pub r#type: Vec<String>,
     pub issuer: String,
     pub issuance_date: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub valid_until: Option<String>,
     pub credential_subject: CredentialSubject,
     pub credential_schema: CredentialSchemaReference,
     pub credential_status: Option<CredentialStatus>,
@@ -93,7 +95,8 @@ pub struct UnsignedCredential {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct CredentialSubject {
-    pub id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
     pub data: HashMap<String, String>,
 }
 
