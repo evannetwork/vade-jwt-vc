@@ -1,7 +1,7 @@
 [package]
 name = "vade-jwt-vc"
 version = "0.2.0"
-authors = ["evan GmbH"]
+authors = ["evan GmbH", "Blockchains Inc."]
 edition = "2018"
 license-file = "LICENSE.txt"
 description = "plugin to issue VC with simple JWT signature based on SECP256K1 curve"
