@@ -76,7 +76,6 @@ async fn create_credential(vade: &mut Vade) -> Result<Credential, Box<dyn Error>
         .as_ref()
         .ok_or("Invalid credential value returned")?;
     let credential: Credential = serde_json::from_str(credential_value)?;
-
     Ok(credential)
 }
 
