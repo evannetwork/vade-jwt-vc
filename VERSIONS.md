@@ -16,6 +16,7 @@
 - make credential subject id optional
 - add validUntil in the issued credential when passed
 - update signing to use `vade-signer` instead of `vade-evan-substrate`
+- remove `credential_subject.id` from `Credential`
 
 ## v0.1.0
 
