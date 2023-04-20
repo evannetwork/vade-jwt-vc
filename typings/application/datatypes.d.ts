@@ -59,7 +59,7 @@ export interface Credential {
   validUntil?: string;
   credentialSubject: CredentialSubject;
   credentialSchema: CredentialSchemaReference;
-  credentialStatus: CredentialStatus;
+  credentialStatus?: CredentialStatus;
   proof: AssertionProof;
 }
 
@@ -77,7 +77,7 @@ export interface UnsignedCredential {
   issuer: string;
   credentialSubject: CredentialSubject;
   credentialSchema: CredentialSchemaReference;
-  credentialStatus: CredentialStatus;
+  credentialStatus?: CredentialStatus;
   validUntil?: string;
   issuanceDate: string;
 }
@@ -86,7 +86,6 @@ export interface UnsignedCredential {
  * Payload/data part of a verifiable credential.
  */
 export interface CredentialSubject {
-  id?: string;
   data: Record<string, string>;
 }
 
@@ -104,7 +103,7 @@ export interface CredentialStatus {
  * Result of a verify_proof call
  */
 export interface ProofVerification {
-  verified: bool;
+  verified: boolean;
 }
 
 /**
