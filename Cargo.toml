@@ -28,7 +28,7 @@ serde_json = { version = "1.0.53", features = ["preserve_order", "raw_value"] }
 sha2 = "0.8.1"
 sha3 = "0.8.2"
 vade = "0.1.0"
-vade-signer = { version = "0.0.1" }
+vade-signer = { git = "https://github.com/evannetwork/vade-signer", branch = "feature/fix-critical-dependency-updates" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 js-sys = { version = "0.3" }

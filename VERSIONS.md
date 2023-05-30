@@ -18,6 +18,10 @@
 - update signing to use `vade-signer` instead of `vade-evan-substrate`
 - remove `credential_subject.id` from `Credential`
 
+### Fixes
+
+- update dependencies for critical vulnerabilities
+
 ## v0.1.0
 
 ### Features
